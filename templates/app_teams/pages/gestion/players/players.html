@@ -1,0 +1,117 @@
+{% extends 'app_teams/teams_base.html' %}
+
+
+{% block title %}
+    <title>Joueurs</title>
+{% endblock title %}
+
+{% block stylesheets %}
+    <style>
+        .td-actions {
+            width: 200px !important;
+            margin: auto;
+        }
+    </style>
+
+{% endblock %}
+
+{% block body %}
+    <h1>Liste des joueurs</h1>
+    <div class="grid">
+        <div class="row">
+            <div class="cell-12">
+                <a class="button primary" href="{% url 'app_teams:addPlayerPage' %}">Ajouter un joueur</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="grid">
+        <div class="row">
+            <div class="cell-12">
+                <table class="table table-border mt-4" data-role="table" data-horizontal-scroll="true"
+                       data-cls-table-top="row flex-nowrap"
+                       data-cls-search="cell-md-8"
+                       data-cls-rows-count="cell-md-4">
+                    <thead>
+                    <tr>
+                        <th data-sortable="true">Nom et prénom</th>
+                        <th data-sortable="true" data-format="date">Date Naiss</th>
+                        <th data-sortable="true">Catégorie</th>
+                        <th data-sortable="true">Status</th>
+                        <th data-cls-column="td-actions text-center">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for player in players %}
+                        <tr>
+                            <td>{{ player.lastname }} {{ player.firstname }}</td>
+                            <td>{{ player.birthday | date:"d/m/Y" }}</td>
+                            <td>{{ player.displayCategory }}</td>
+                            <td>
+                                {% if player.status == 'Suspendu' %}
+                                    <div class="bg-red  fg-white">{{ player.status }}</div>
+                                {% endif %}
+
+                                {% if player.status == 'Inactif' %}
+                                    <div class="bg-amber">{{ player.status }}</div>
+                                {% endif %}
+
+                                {% if player.status == 'Actif' %}
+                                    <div class="bg-green fg-white">{{ player.status }}</div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <button class="button primary outline"><span class="mif-compass"></span></button>
+                                {% if player.status == 'Actif' %}
+                                <a class="button success outline disabled" href="{% url 'app_teams:updatePlayerPage' player.id %}"><span class="mif-pencil"></span></a>
+                                {% endif %}
+                            {% if player.status != 'Actif' %}
+                                <a class="button success outline" href="{% url 'app_teams:updatePlayerPage' player.id %}"><span class="mif-pencil"></span></a>
+                                {% endif %}
+                                <button class="button alert outline" onclick="DeletePlayer({{ player.id }}, '{{ player.firstname }}', '{{ player.lastname }}')"><span class="mif-cancel"></span></button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div id="deletePlayerDialog" class="dialog alert" data-role="dialog">
+        <div class="dialog-title">Suppression du joueur?</div>
+        <div class="dialog-content" id="deletePlayerContent">
+            Bassus abactors ducunt ad triticum.
+            A fraternal form of manifestation is the bliss.
+        </div>
+        <div class="dialog-actions">
+            <button class="button js-dialog-close">Non</button>
+            <a class="button alert fg-white js-dialog-close" id="DeletePlayerButton">Oui</a>
+        </div>
+    </div>
+
+{% endblock body %}
+
+{% block javascript %}
+    <script>
+        var playerSelected = 0
+
+        function selectPlayer($event) {
+            console.log($event)
+        }
+
+        function DeletePlayer(id, fn, ln){
+            $('#deletePlayerContent').html('Vous êtes sur de supprimer <b>'+ ln + ' '+ fn + '</b> de votre équipe?');
+            $('#DeletePlayerButton').attr('href', "{% url 'app_teams:deletePlayer' 123 %}".replace('123', id));
+            Metro.dialog.open('#deletePlayerDialog')
+
+        }
+        /*Delete Player*/
+    </script>
+
+{% endblock %}
+
+

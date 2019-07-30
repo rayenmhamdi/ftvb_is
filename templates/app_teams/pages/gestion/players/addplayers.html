@@ -1,0 +1,408 @@
+{% extends 'app_teams/teams_base.html' %}
+
+
+{% block title %}
+    <title>Ajouter joueur</title>
+{% endblock title %}
+
+
+{% block body %}
+    <h1>Ajouter un joueur</h1>
+
+    <div class="grid">
+        <div class="row">
+            <div class="cell-12">
+                <form action="{% url 'app_teams:savePlayer' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="cell-md-12 cell-12 mb-5">
+                            <label>Catégorie</label>
+                            <select data-role="select" id="categorySelector" name="category" required>
+                                <optgroup label="Garcons">
+                                    <option value="SG" data-minage="21">Séniors Garçons</option>
+                                    <option value="JG" data-minage="19" data-maxage="20">Juniors Garçons</option>
+                                    <option value="CG" data-minage="17" data-maxage="18">Cadet Garçons</option>
+                                    <option value="MG" data-minage="15" data-maxage="16">Minimes Garçons</option>
+                                    <option value="EG" data-minage="13" data-maxage="14">Ecole Garçons</option>
+                                    <option value="BG" data-minage="0" data-maxage="12">Benjamin Garçons</option>
+                                </optgroup>
+                                <optgroup label="Filles">
+                                    <option value="SF" data-minage="21">Séniors Filles</option>
+                                    <option value="JF" data-minage="18" data-maxage="20">Juniors Filles</option>
+                                    <option value="CF" data-minage="16" data-maxage="17">Cadettes Filles</option>
+                                    <option value="MF" data-minage="14" data-maxage="15">Minimes Filles</option>
+                                    <option value="EF" data-minage="0" data-maxage="13">Ecole Filles</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="cell-md-12 cell-12 mb-5">
+                            <div  data-role="accordion" data-one-frame="false" data-show-active="true"
+                                 data-material="true">
+                                <div id="ageTableFrame" class="frame active">
+                                    <div class="heading" style="padding-bottom: 5px !important;"><h4 style="margin-bottom: 0px !important; margin-top: 0px !important;">Tableau d'age pour le saison sportif {{ season.first_year_season }}-{{ season.second_year_season }}</h4></div>
+                                    <div id="ageTableContent" class="content">
+                                        <div class="text-center remark dark">
+                                            <table class="mx-auto table w-75 row-border  cell-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-center">Catégories Garcons</th>
+                                                    <th class="text-center">Catégories Filles</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td>Sénios Garcons: >= {{ season.second_year_season|add:"-21" }}</td>
+                                                    <td>Séniors Filles: >= {{ season.second_year_season|add:"-21" }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Juniors Garcons: {{ season.second_year_season|add:"-20" }}-{{ season.second_year_season|add:"-19" }}</td>
+                                                    <td>Juniors Filles: {{ season.second_year_season|add:"-20" }}-{{ season.second_year_season|add:"-18" }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Cadets Garcons: {{ season.second_year_season|add:"-18" }}-{{ season.second_year_season|add:"-17" }}</td>
+                                                    <td>Cadettes Filles: {{ season.second_year_season|add:"-17" }}-{{ season.second_year_season|add:"-16" }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Minimes Garcons: {{ season.second_year_season|add:"-16" }}-{{ season.second_year_season|add:"-15" }}</td>
+                                                    <td>Minimes Filles: {{ season.second_year_season|add:"-15" }}-{{ season.second_year_season|add:"-14" }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Ecole Garcons: {{ season.second_year_season|add:"-14" }}-{{ season.second_year_season|add:"-13" }}</td>
+                                                    <td>Ecole Filles: {{ season.second_year_season|add:"-13" }}-{{ season.second_year_season }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Benjamins Garcons: {{ season.second_year_season|add:"-12" }}-{{ season.second_year_season}}</td>
+                                                    <td></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="cell-md-6 cell-12 mb-5">
+                            <label>Nom du joueur</label>
+                            <input type="text" name="lastname" placeholder="Nom du joueur" required>
+                        </div>
+                        <div class="cell-md-6 cell-12 mb-5">
+                            <label>Prénom du joueur</label>
+                            <input type="text" name="firstname" placeholder="Prénom du joueur" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="cell-md-6 cell-12 mb-5">
+                            <label>Date de naissance</label>
+                            <input id="dateNaiss" type="text" name="birthday" data-role="calendarpicker" data-dialog-mode="true"
+                                   data-calendar-wide-point="md" required>
+                        </div>
+                        <div class="cell-md-6 cell-12 mb-5">
+                            <label>Nationalité</label>
+                            <select data-role="select" name="nationality" required>
+                                <option value="Afghanistan">Afghanistan</option>
+                                <option value="Afrique_du_Sud">Afrique du Sud</option>
+                                <option value="Albanie">Albanie</option>
+                                <option value="Algerie">Algérie</option>
+                                <option value="Allemagne">Allemagne</option>
+                                <option value="Andorre">Andorre</option>
+                                <option value="Angola">Angola</option>
+                                <option value="Antigua-et-Barbuda">Antigua-et-Barbuda</option>
+                                <option value="Arabie_saoudite">Arabie saoudite</option>
+                                <option value="Argentine">Argentine</option>
+                                <option value="Armenie">Arménie</option>
+                                <option value="Australie">Australie</option>
+                                <option value="Autriche">Autriche</option>
+                                <option value="Azerbaidjan">Azerbaïdjan</option>
+                                <option value="Bahamas">Bahamas</option>
+                                <option value="Bahrein">Bahreïn</option>
+                                <option value="Bangladesh">Bangladesh</option>
+                                <option value="Barbade">Barbade</option>
+                                <option value="Belau">Belau</option>
+                                <option value="Belgique">Belgique</option>
+                                <option value="Belize">Belize</option>
+                                <option value="Benin">Bénin</option>
+                                <option value="Bhoutan">Bhoutan</option>
+                                <option value="Bielorussie">Biélorussie</option>
+                                <option value="Birmanie">Birmanie</option>
+                                <option value="Bolivie">Bolivie</option>
+                                <option value="Bosnie-Herzégovine">Bosnie-Herzégovine</option>
+                                <option value="Botswana">Botswana</option>
+                                <option value="Bresil">Brésil</option>
+                                <option value="Brunei">Brunei</option>
+                                <option value="Bulgarie">Bulgarie</option>
+                                <option value="Burkina">Burkina</option>
+                                <option value="Burundi">Burundi</option>
+                                <option value="Cambodge">Cambodge</option>
+                                <option value="Cameroun">Cameroun</option>
+                                <option value="Canada">Canada</option>
+                                <option value="Cap-Vert">Cap-Vert</option>
+                                <option value="Chili">Chili</option>
+                                <option value="Chine">Chine</option>
+                                <option value="Chypre">Chypre</option>
+                                <option value="Colombie">Colombie</option>
+                                <option value="Comores">Comores</option>
+                                <option value="Congo">Congo</option>
+                                <option value="Cook">Cook</option>
+                                <option value="Coree_du_Nord">Corée du Nord</option>
+                                <option value="Coree_du_Sud">Corée du Sud</option>
+                                <option value="Costa_Rica">Costa Rica</option>
+                                <option value="Cote_Ivoire">Côte d'Ivoire</option>
+                                <option value="Croatie">Croatie</option>
+                                <option value="Cuba">Cuba</option>
+                                <option value="Danemark">Danemark</option>
+                                <option value="Djibouti">Djibouti</option>
+                                <option value="Dominique">Dominique</option>
+                                <option value="Egypte">Égypte</option>
+                                <option value="Emirats_arabes_unis">Émirats arabes unis</option>
+                                <option value="Equateur">Équateur</option>
+                                <option value="Erythree">Érythrée</option>
+                                <option value="Espagne">Espagne</option>
+                                <option value="Estonie">Estonie</option>
+                                <option value="Etats-Unis">États-Unis</option>
+                                <option value="Ethiopie">Éthiopie</option>
+                                <option value="Fidji">Fidji</option>
+                                <option value="Finlande">Finlande</option>
+                                <option value="France">France</option>
+                                <option value="Gabon">Gabon</option>
+                                <option value="Gambie">Gambie</option>
+                                <option value="Georgie">Géorgie</option>
+                                <option value="Ghana">Ghana</option>
+                                <option value="Grèce">Grèce</option>
+                                <option value="Grenade">Grenade</option>
+                                <option value="Guatemala">Guatemala</option>
+                                <option value="Guinee">Guinée</option>
+                                <option value="Guinee-Bissao">Guinée-Bissao</option>
+                                <option value="Guinee_equatoriale">Guinée équatoriale</option>
+                                <option value="Guyana">Guyana</option>
+                                <option value="Haiti">Haïti</option>
+                                <option value="Honduras">Honduras</option>
+                                <option value="Hongrie">Hongrie</option>
+                                <option value="Inde">Inde</option>
+                                <option value="Indonesie">Indonésie</option>
+                                <option value="Iran">Iran</option>
+                                <option value="Iraq">Iraq</option>
+                                <option value="Irlande">Irlande</option>
+                                <option value="Islande">Islande</option>
+                                <option value="Israël">Israël</option>
+                                <option value="Italie">Italie</option>
+                                <option value="Jamaique">Jamaïque</option>
+                                <option value="Japon">Japon</option>
+                                <option value="Jordanie">Jordanie</option>
+                                <option value="Kazakhstan">Kazakhstan</option>
+                                <option value="Kenya">Kenya</option>
+                                <option value="Kirghizistan">Kirghizistan</option>
+                                <option value="Kiribati">Kiribati</option>
+                                <option value="Koweit">Koweït</option>
+                                <option value="Laos">Laos</option>
+                                <option value="Lesotho">Lesotho</option>
+                                <option value="Lettonie">Lettonie</option>
+                                <option value="Liban">Liban</option>
+                                <option value="Liberia">Liberia</option>
+                                <option value="Libye">Libye</option>
+                                <option value="Liechtenstein">Liechtenstein</option>
+                                <option value="Lituanie">Lituanie</option>
+                                <option value="Luxembourg">Luxembourg</option>
+                                <option value="Macedoine">Macédoine</option>
+                                <option value="Madagascar">Madagascar</option>
+                                <option value="Malaisie">Malaisie</option>
+                                <option value="Malawi">Malawi</option>
+                                <option value="Maldives">Maldives</option>
+                                <option value="Mali">Mali</option>
+                                <option value="Malte">Malte</option>
+                                <option value="Maroc">Maroc</option>
+                                <option value="Marshall">Marshall</option>
+                                <option value="Maurice">Maurice</option>
+                                <option value="Mauritanie">Mauritanie</option>
+                                <option value="Mexique">Mexique</option>
+                                <option value="Micronesie">Micronésie</option>
+                                <option value="Moldavie">Moldavie</option>
+                                <option value="Monaco">Monaco</option>
+                                <option value="Mongolie">Mongolie</option>
+                                <option value="Mozambique">Mozambique</option>
+                                <option value="Namibie">Namibie</option>
+                                <option value="Nauru">Nauru</option>
+                                <option value="Nepal">Népal</option>
+                                <option value="Nicaragua">Nicaragua</option>
+                                <option value="Niger">Niger</option>
+                                <option value="Nigeria">Nigeria</option>
+                                <option value="Niue">Niue</option>
+                                <option value="Norvège">Norvège</option>
+                                <option value="Nouvelle-Zelande">Nouvelle-Zélande</option>
+                                <option value="Oman">Oman</option>
+                                <option value="Ouganda">Ouganda</option>
+                                <option value="Ouzbekistan">Ouzbékistan</option>
+                                <option value="Pakistan">Pakistan</option>
+                                <option value="Palestine">Palestine</option>
+                                <option value="Panama">Panama</option>
+                                <option value="Papouasie-Nouvelle_Guinee">Papouasie - Nouvelle Guinée</option>
+                                <option value="Paraguay">Paraguay</option>
+                                <option value="Pays-Bas">Pays-Bas</option>
+                                <option value="Perou">Pérou</option>
+                                <option value="Philippines">Philippines</option>
+                                <option value="Pologne">Pologne</option>
+                                <option value="Portugal">Portugal</option>
+                                <option value="Qatar">Qatar</option>
+                                <option value="Republique_centrafricaine">République centrafricaine</option>
+                                <option value="Republique_dominicaine">République dominicaine</option>
+                                <option value="Republique_tcheque">République tchèque</option>
+                                <option value="Roumanie">Roumanie</option>
+                                <option value="Royaume-Uni">Royaume-Uni</option>
+                                <option value="Russie">Russie</option>
+                                <option value="Rwanda">Rwanda</option>
+                                <option value="Saint-Christophe-et-Nieves">Saint-Christophe-et-Niévès</option>
+                                <option value="Sainte-Lucie">Sainte-Lucie</option>
+                                <option value="Saint-Marin">Saint-Marin</option>
+                                <option value="Saint-Siège">Saint-Siège, ou leVatican</option>
+                                <option value="Saint-Vincent-et-les_Grenadines">Saint-Vincent-et-les Grenadines</option>
+                                <option value="Salomon">Salomon</option>
+                                <option value="Salvador">Salvador</option>
+                                <option value="Samoa_occidentales">Samoa occidentales</option>
+                                <option value="Sao_Tome-et-Principe">Sao Tomé-et-Principe</option>
+                                <option value="Senegal">Sénégal</option>
+                                <option value="Seychelles">Seychelles</option>
+                                <option value="Sierra_Leone">Sierra Leone</option>
+                                <option value="Singapour">Singapour</option>
+                                <option value="Slovaquie">Slovaquie</option>
+                                <option value="Slovenie">Slovénie</option>
+                                <option value="Somalie">Somalie</option>
+                                <option value="Soudan">Soudan</option>
+                                <option value="Sri_Lanka">Sri Lanka</option>
+                                <option value="Sued">Suède</option>
+                                <option value="Suisse">Suisse</option>
+                                <option value="Suriname">Suriname</option>
+                                <option value="Swaziland">Swaziland</option>
+                                <option value="Syrie">Syrie</option>
+                                <option value="Tadjikistan">Tadjikistan</option>
+                                <option value="Tanzanie">Tanzanie</option>
+                                <option value="Tchad">Tchad</option>
+                                <option value="Thailande">Thaïlande</option>
+                                <option value="Togo">Togo</option>
+                                <option value="Tonga">Tonga</option>
+                                <option value="Trinite-et-Tobago">Trinité-et-Tobago</option>
+                                <option selected value="Tunisie">Tunisie</option>
+                                <option value="Turkmenistan">Turkménistan</option>
+                                <option value="Turquie">Turquie</option>
+                                <option value="Tuvalu">Tuvalu</option>
+                                <option value="Ukraine">Ukraine</option>
+                                <option value="Uruguay">Uruguay</option>
+                                <option value="Vanuatu">Vanuatu</option>
+                                <option value="Venezuela">Venezuela</option>
+                                <option value="Viet_Nam">Viêt Nam</option>
+                                <option value="Yemen">Yémen</option>
+                                <option value="Yougoslavie">Yougoslavie</option>
+                                <option value="Zaire">Zaïre</option>
+                                <option value="Zambie">Zambie</option>
+                                <option value="Zimbabwe">Zimbabwe</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group mb-5">
+                        <label>Adresse</label>
+                        <input type="text" name="address" placeholder="Adresse du joueurs actuelle" required>
+                    </div>
+                    <div class="row">
+                        <div class="cell-md-6 cell-12 mb-5">
+                            <label>Photo du joueur</label>
+                            <input type="file" name="photo" data-role="file" data-prepend="Photo:" accept="image/*"
+                                   required>
+                        </div>
+                        <div class="cell-md-6 cell-12 mb-5">
+                            <label>Justification du joueur</label>
+                            <input type="file" name="proof" data-role="file" data-prepend="Justificatif:"
+                                   accept="image/*" required>
+                            <small class="text-muted">La justificatif faut etre CIN, Passport ou Carte d'école.</small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="button success">Enregister le joueur</button>
+                        <input type="reset" class="button" value="Annuler">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock body %}
+
+{% block javascript %}
+    <script>
+    function hideAccordion(){
+        $("#ageTableFrame").removeClass("active")
+        $("#ageTableContent").css("display", 'None')
+    }
+
+
+    $('#dateNaiss').attr('value', new Date())
+    $("#categorySelector").change(function(){
+        if ($("#categorySelector").val() == 'SG' || $("#categorySelector").val() == 'SF'){
+            $('#dateNaiss').attr('value', new Date())
+            $('#dateNaiss').attr('data-min-date', new Date().addYears(-50))
+            $('#dateNaiss').attr('data-max-date', new Date().addYears(50))
+        }
+
+        if ($("#categorySelector").val() == 'JG'){
+            $('#dateNaiss').attr('value', "{{ season.second_year_season|add:"-20" }}"+"/01/01")
+            $('#dateNaiss').attr('data-min-date', "{{ season.second_year_season|add:"-20" }}"+"/01/01")
+            $('#dateNaiss').attr('data-max-date', "{{ season.second_year_season|add:"-19" }}"+"/12/31")
+        }
+
+        if ($("#categorySelector").val() == 'CG'){
+            $('#dateNaiss').attr('value', "{{ season.second_year_season|add:"-18" }}"+"/01/01")
+            $('#dateNaiss').attr('data-min-date', "{{ season.second_year_season|add:"-18" }}"+"/01/01")
+            $('#dateNaiss').attr('data-max-date', "{{ season.second_year_season|add:"-17" }}"+"/12/31")
+        }
+
+        if ($("#categorySelector").val() == 'MG'){
+            $('#dateNaiss').attr('value', "{{ season.second_year_season|add:"-16" }}"+"/01/01")
+            $('#dateNaiss').attr('data-min-date', "{{ season.second_year_season|add:"-16" }}"+"/01/01")
+            $('#dateNaiss').attr('data-max-date', "{{ season.second_year_season|add:"-15" }}"+"/12/31")
+        }
+
+        if ($("#categorySelector").val() == 'EG'){
+            $('#dateNaiss').attr('value', "{{ season.second_year_season|add:"-14" }}"+"/01/01")
+            $('#dateNaiss').attr('data-min-date', "{{ season.second_year_season|add:"-14" }}"+"/01/01")
+            $('#dateNaiss').attr('data-max-date', "{{ season.second_year_season|add:"-13" }}"+"/12/31")
+        }
+
+        if ($("#categorySelector").val() == 'BG'){
+            $('#dateNaiss').attr('value', "{{ season.second_year_season|add:"-12" }}"+"/01/01")
+            $('#dateNaiss').attr('data-min-date', "{{ season.second_year_season|add:"-12" }}"+"/01/01")
+            $('#dateNaiss').attr('data-max-date', "{{ season.second_year_season }}"+"/12/31")
+        }
+
+
+        if ($("#categorySelector").val() == 'JF'){
+            $('#dateNaiss').attr('value', "{{ season.second_year_season|add:"-20" }}"+"/01/01")
+            $('#dateNaiss').attr('data-min-date', "{{ season.second_year_season|add:"-20" }}"+"/01/01")
+            $('#dateNaiss').attr('data-max-date', "{{ season.second_year_season|add:"-18" }}"+"/12/31")
+        }
+
+        if ($("#categorySelector").val() == 'CF'){
+            $('#dateNaiss').attr('value', "{{ season.second_year_season|add:"-17" }}"+"/01/01")
+            $('#dateNaiss').attr('data-min-date', "{{ season.second_year_season|add:"-17" }}"+"/01/01")
+            $('#dateNaiss').attr('data-max-date', "{{ season.second_year_season|add:"-16" }}"+"/12/31")
+        }
+
+        if ($("#categorySelector").val() == 'MF'){
+            $('#dateNaiss').attr('value', "{{ season.second_year_season|add:"-15" }}"+"/01/01")
+            $('#dateNaiss').attr('data-min-date', "{{ season.second_year_season|add:"-15" }}"+"/01/01")
+            $('#dateNaiss').attr('data-max-date', "{{ season.second_year_season|add:"-14" }}"+"/12/31")
+        }
+
+        if ($("#categorySelector").val() == 'EF'){
+            $('#dateNaiss').attr('value', "{{ season.second_year_season|add:"-13" }}"+"/01/01")
+            $('#dateNaiss').attr('data-min-date', "{{ season.second_year_season|add:"-13" }}"+"/01/01")
+            $('#dateNaiss').attr('data-max-date', "{{ season.second_year_season }}"+"/12/31")
+        }
+
+
+    })
+
+
+    </script>
+{% endblock %}
+
+

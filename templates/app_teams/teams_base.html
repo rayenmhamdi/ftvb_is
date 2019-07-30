@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    {% load static %}
+
+    {% block title %}
+        <title>Application de l'équipe</title>
+    {% endblock title %}
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="metro4:locale" content="fr-FR">
+
+    <!-- Metro 4 -->
+    <link rel="stylesheet" href="{% static "css/metro-all.min.css" %}">
+    <style>
+        .dropdown-toggle::before {
+            border-color: white;
+        }
+    </style>
+    {% block stylesheets %}
+    {% endblock %}
+</head>
+<body>
+
+{% if user.is_authenticated and user.user_type == 4 %}
+
+    <nav data-role="appbar" class="bg-darkBlue fg-white" data-expand-point="md">
+        <a href="#" class="brand no-hover">{{ user.team.team_name }}</a>
+
+        <ul class="app-bar-menu ml-auto">
+            <li>
+                <a href="{% url 'app_teams:home' %}" class="dropdown-toggle">Résumé</a>
+                <ul class="d-menu" data-role="dropdown">
+                    <li><a href="#">Calendrier</a></li>
+                    <li class="divider bg-lightGray"></li>
+                    <li><a href="#">Gallerie</a></li>
+                    <li><a href="#">Palmarès</a></li>
+                </ul>
+            </li>
+            <li><a href="#">Matches</a></li>
+            <li>
+                <a href="{% url 'app_teams:home' %}" class="dropdown-toggle">Gestion</a>
+                <ul class="d-menu" data-role="dropdown">
+                    <li><a href="{% url 'app_teams:players' %}">Joueurs</a></li>
+                    <li><a href="#">Staff</a></li>
+                    <li><a href="#">Equipe</a></li>
+                </ul>
+            </li>
+            <li><a href="{% url 'app_teams:team_logout' %}"><span class="mif-switch icon"></span> Déconnecter
+                ({{ user.team.team_short }})</a></li>
+        </ul>
+    </nav>
+
+
+    <div class="container mt-18">
+        {% block body %}
+
+        {% endblock body %}
+    </div>
+{% else %}
+    <p>Vous n'êtes pas conncter</p>
+
+    <a href="{% url 'app_teams:team_logout' %}">Connecter</a>
+{% endif %}
+
+<!-- jQuery first, then Metro UI JS -->
+<script src="{% static "js/jquery.min.js" %}"></script>
+<script src="{% static "js/metro.js" %}"></script>
+{% block javascript %}
+{% endblock %}
+</body>
+</html>
